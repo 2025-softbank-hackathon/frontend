@@ -1,70 +1,56 @@
-# Getting Started with Create React App
+# Global Chat Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+React 18 single-room chat UI that connects to a Spring Boot STOMP WebSocket backend. Users join with a nickname (no authentication) and exchange text-only messages in real time.
+
+## Quick Start
+
+```bash
+npm install
+npm start
+```
+
+Open http://localhost:3000 after the dev server starts.
+
+> ℹ️ Network access is required for the dependency installation step. If the command fails due to offline mode, retry once you have connectivity.
+
+## Environment Variables
+
+Create a `.env.local` file to configure the backend endpoints:
+
+```dotenv
+REACT_APP_API_BASE=http://localhost:8080
+REACT_APP_WS_URL=http://localhost:8080/ws-stomp
+REACT_APP_STOMP_SUB=/topic/chatroom/global
+REACT_APP_STOMP_PUB=/app/chatroom.send
+```
+
+Restart the dev server after changing any env values.
 
 ## Available Scripts
 
-In the project directory, you can run:
+- `npm start` – start the development server with fast refresh.
+- `npm run build` – create a production build in `build/`.
+- `npm test` – run Jest tests (none are included by default).
 
-### `npm start`
+## Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- Automatic nickname issuance via `/api/join`; no client nickname prompt.
+- Initial bootstrap fetch of the latest 100 messages from `/api/messages`.
+- STOMP over SockJS connection with exponential backoff reconnects and error toasts.
+- Connection badge + notice banner reflecting `connecting`, `connected`, `reconnecting` and `disconnected` states (rate limit badge support).
+- Optimistic rendering for outgoing messages with reconciliation once the server echoes them.
+- Accessible input area: multiline textarea (Shift+Enter newline, Enter send), 500 character counter, focusable controls.
+- Responsive layout tuned for desktop and ≤480px wide screens.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Keyboard Shortcuts
 
-### `npm test`
+- `Enter` – send message
+- `Shift + Enter` – add newline in the composer
+- `Tab` – move focus between interactive elements inside the chat composer area
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Limitations & Notes
 
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Only text messages are rendered; other payload types are ignored client-side.
+- Message size is clamped to 500 characters before sending.
+- Optimistic messages mark errors when publishing fails; retry manually.
+- Ensure the backend echoes a unique `id` or `clientId` per message for best deduplication.
