@@ -9,7 +9,7 @@ npm install
 npm start
 ```
 
-Open http://localhost:3000 after the dev server starts.
+Open http://localhost:3002 after the dev server starts.
 
 > ℹ️ Network access is required for the dependency installation step. If the command fails due to offline mode, retry once you have connectivity.
 
