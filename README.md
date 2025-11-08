@@ -18,8 +18,8 @@ Open http://localhost:3000 after the dev server starts.
 Create a `.env.local` file to configure the backend endpoints:
 
 ```dotenv
-REACT_APP_API_BASE=http://localhost:8080
-REACT_APP_WS_URL=http://localhost:8080/ws-stomp
+REACT_APP_API_BASE=http://localhost:3000
+REACT_APP_WS_URL=http://localhost:3000/ws-stomp
 REACT_APP_STOMP_SUB=/topic/chatroom/global
 REACT_APP_STOMP_PUB=/app/chatroom.send
 ```
